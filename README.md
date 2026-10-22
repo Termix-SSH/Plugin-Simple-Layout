@@ -6,6 +6,12 @@
 
 <p>A simple Termix layout for small setups with a top bar, a Home screen and only the basics</p>
 
+<!-- VIDEO:START -->
+
+<a href="https://www.youtube.com/watch?v=KAa9WinKwfw"><img src="https://img.shields.io/badge/Watch_the_demo-f59145?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch the demo on YouTube" /></a>
+
+<!-- VIDEO:END -->
+
 </div>
 
 <br />
