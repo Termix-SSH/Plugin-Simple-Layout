@@ -10,7 +10,7 @@ import {
   useShellController,
 } from "@termix-ssh/plugin-sdk/ui";
 import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
-import { NAV_BUTTONS, useMoreItems } from "./nav";
+import { NAV_BUTTONS, tabTitle, useMoreItems } from "./nav";
 
 /** The phone navigation: four buttons, and a sheet for open tabs and plugin tools. */
 export function BottomBar() {
@@ -80,11 +80,7 @@ export function BottomBar() {
                   }}
                 >
                   {tabIcon(tab.type)}
-                  <span className="truncate">
-                    {tab.type === "dashboard"
-                      ? t("nav.home")
-                      : tab.customLabel || tab.label}
-                  </span>
+                  <span className="truncate">{tabTitle(tab, t)}</span>
                 </button>
                 {tab.type !== "dashboard" && (
                   <button

@@ -52,3 +52,13 @@ export const NAV_BUTTONS: NavButton[] = [
   { id: "search", labelKey: "nav.search", icon: Search },
   { id: "settings", labelKey: "nav.settings", icon: Settings },
 ];
+
+/** The name a tab shows. Core names the Hosts tab "Manage", so it is renamed here. */
+export function tabTitle(
+  tab: { type: string; label: string; customLabel?: string },
+  t: (key: string) => string,
+): string {
+  if (tab.type === "dashboard") return t("nav.home");
+  if (tab.type === "host-manager") return t("nav.hosts");
+  return tab.customLabel || tab.label;
+}

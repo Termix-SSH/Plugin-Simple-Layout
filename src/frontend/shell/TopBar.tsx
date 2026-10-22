@@ -25,12 +25,7 @@ import {
   type Tab,
 } from "@termix-ssh/plugin-sdk/ui";
 import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
-import { useMoreItems } from "./nav";
-
-function tabTitle(tab: Tab, home: string): string {
-  if (tab.type === "dashboard") return home;
-  return tab.customLabel || tab.label;
-}
+import { tabTitle, useMoreItems } from "./nav";
 
 /** The desktop bar: brand, open tabs, and the few buttons that matter. */
 export function TopBar() {
@@ -49,9 +44,7 @@ export function TopBar() {
           <img src={branding.logo} alt="" className="size-5 object-contain" />
         ) : null}
         <span className="truncate">
-          {tabs.active
-            ? tabTitle(tabs.active, t("nav.home"))
-            : branding.appName}
+          {tabs.active ? tabTitle(tabs.active, t) : branding.appName}
         </span>
       </header>
     );
@@ -87,7 +80,7 @@ export function TopBar() {
           <TabButton
             key={tab.id}
             active={tab.id === tabs.activeId}
-            title={tabTitle(tab, t("nav.home"))}
+            title={tabTitle(tab, t)}
             icon={tabIcon(tab.type)}
             onClick={() => tabs.setActive(tab.id)}
             onClose={

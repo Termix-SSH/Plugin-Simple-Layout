@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1
+
+### Fixed
+
+- The Hosts tab was named Manage in the top bar
+
 ## 1.0.0
 
 ### Added
