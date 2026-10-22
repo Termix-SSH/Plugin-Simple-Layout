@@ -1,9 +1,9 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
 import {
   renderWithApp,
   type RenderedPluginApp,
 } from "@termix-ssh/plugin-sdk/testing";
+import { getRegisteredLayout } from "@termix-ssh/plugin-sdk/testing-host";
 import type { PluginManifest } from "@termix-ssh/plugin-sdk/manifest";
 import * as plugin from "../../src/frontend/index";
 import manifestJson from "../../manifest.json";
@@ -19,52 +19,38 @@ afterEach(async () => {
 });
 
 describe(`${manifest.id} activate`, () => {
-  it("registers the rail item and tab", async () => {
+  it("registers the layout its manifest declares", async () => {
     rendered = await renderWithApp(plugin, { manifest, locales });
-    expect(rendered.registered.tabs()).toEqual(["hello-world"]);
-    expect(rendered.registered.railItems()).toEqual([
-      expect.objectContaining({
-        id: "hello-world",
-        permission: "hello-world.use",
-      }),
+    const layout = getRegisteredLayout("simple");
+    expect(layout).toMatchObject({ id: "simple", pluginId: manifest.id });
+    expect(typeof layout?.component).toBe("function");
+    expect(manifest.contributes?.layouts?.map((entry) => entry.id)).toEqual([
+      "simple",
     ]);
   });
 
-  it("shows the greeting and notes", async () => {
-    rendered = await renderWithApp(plugin, {
-      manifest,
-      locales,
-      api: {
-        get: vi.fn(async () => ({
-          data: {
-            greeting: "Hi there",
-            notes: [{ id: 1, text: "first", createdAt: "" }],
-          },
-        })),
-      } as never,
-    });
-    rendered.renderTab("hello-world", { isVisible: true });
-    expect(await screen.findByText("Hi there")).toBeTruthy();
-    expect(screen.getByText("first")).toBeTruthy();
+  it("registers the Home, Hosts and Settings tab types", async () => {
+    rendered = await renderWithApp(plugin, { manifest, locales });
+    expect(rendered.registered.tabs().sort()).toEqual([
+      "dashboard",
+      "host-manager",
+      "settings",
+    ]);
   });
 
-  it("shows an error when a note cannot be saved", async () => {
-    rendered = await renderWithApp(plugin, {
-      manifest,
-      locales,
-      api: {
-        get: vi.fn(async () => ({ data: { greeting: "Hello", notes: [] } })),
-        post: vi.fn(async () => {
-          throw new Error("offline");
-        }),
-      } as never,
-    });
-    rendered.renderTab("hello-world", { isVisible: true });
-    await screen.findByText(locales.tab.empty);
-    fireEvent.change(screen.getByPlaceholderText(locales.tab.placeholder), {
-      target: { value: "note" },
-    });
-    fireEvent.click(screen.getByText(locales.tab.add));
-    expect(await screen.findByText(locales.tab.error)).toBeTruthy();
+  it("takes everything back when it is turned off", async () => {
+    rendered = await renderWithApp(plugin, { manifest, locales });
+    await rendered.deactivate();
+    rendered = null;
+    expect(getRegisteredLayout("simple")).toBeUndefined();
+  });
+
+  it("declares every tab it registers", () => {
+    expect(manifest.capabilities).toContain("ui:layout");
+    expect(manifest.contributes?.tabs?.map((tab) => tab.id).sort()).toEqual([
+      "dashboard",
+      "host-manager",
+      "settings",
+    ]);
   });
 });

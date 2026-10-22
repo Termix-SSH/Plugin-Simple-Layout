@@ -4,6 +4,6 @@
 
 ### Added
 
-- A tab with notes
-- One admin setting
-- One table with migrations for SQLite, PostgreSQL and MySQL
+- A simple layout for small setups: top bar, Home screen with a card for each host, short host and credential forms, and a short Settings screen
+- A search window that finds hosts, tabs and plugin actions
+- A bottom bar on phones

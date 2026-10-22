@@ -1,12 +1,19 @@
-Hello World adds a tab where you can save short notes. It is a small example plugin to copy when you start your own.
+Simple Layout is a layout for small setups, like a home lab with a handful of hosts. It leaves out the sidebar, docks, split view and the long settings lists.
 
-## Turn it on
+## What it gives you
 
-1. Install Hello World from the Plugins tab.
-2. Open the Hello World tab from the sidebar.
+A top bar holds Home, your open tabs, Search, Settings and your account menu. Home shows a card for each host. Click a card to connect, or use the buttons on it to open a plugin tool such as files or Docker.
 
-## Use it
+Hosts and credentials are managed in the Hosts tab. The forms ask for the basics first. Extra options from plugins sit under More options.
 
-Type a note and press Add. Notes are stored on the server and each user sees only their own. Using the tab needs the Use Hello World permission, which admins and users get by default.
+Settings has Appearance, Account, Plugins and the settings plugins add.
 
-Admins can change the greeting at the top of the tab in Settings, under Hello World.
+## Switch layouts
+
+Open Settings, Appearance and pick a layout. Admins can set the default for everyone. You can switch back at any time.
+
+If a layout cannot be shown, Termix opens a repair screen. Add `?safe-layout=1` to the address to open it on purpose.
+
+## What is not here
+
+Split view, the side docks, the icon rail, keyboard shortcut editing and the admin pages for users and server settings. Switch to Classic Layout when you need them.
