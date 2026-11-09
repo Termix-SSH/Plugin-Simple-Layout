@@ -32,6 +32,7 @@ Read the [docs](https://docs.termix.site/plugins/simple-layout) to learn how it 
 - Only the settings most people need
 - Search window
 - Mobile bottom bar
+- Host cards show the badges other plugins add
 
 <br />
 

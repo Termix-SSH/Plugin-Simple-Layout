@@ -1,12 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  ArrowLeft,
-  KeyRound,
-  Plus,
-  Search,
-  Server,
-  Trash2,
-} from "lucide-react";
+import { KeyRound, Plus, Search, Server, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   Button,
@@ -31,6 +24,9 @@ import {
   type Host,
   type HostPolicy,
   type ManageRequest,
+  ToolbarBand,
+  PanelShell,
+  BackButton,
 } from "@termix-ssh/plugin-sdk/ui";
 import {
   useTranslation,
@@ -129,6 +125,11 @@ export function HostsTab() {
         const host = request.hostId
           ? (hostsRef.current.find((h) => h.id === request.hostId) ?? null)
           : null;
+        // A host that is gone must not turn into a new host form.
+        if (request.hostId && !host) {
+          toast.error(t("manage.hostNotFound"));
+          return;
+        }
         openHost(host, request.draft);
       } else if (request.kind === "credential") {
         const credential = request.credentialId
@@ -149,7 +150,7 @@ export function HostsTab() {
         close();
       }
     },
-    [confirmDiscard, openHost],
+    [confirmDiscard, openHost, t],
   );
 
   // A request that opened this tab was parked before it mounted.
@@ -223,21 +224,20 @@ export function HostsTab() {
           ? editing.credential.name
           : t("manage.newCredential");
     return (
-      <div className="flex flex-1 min-h-0 flex-col overflow-y-auto">
-        <div className="flex items-center gap-2 border-b border-border px-4 py-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-7 gap-1.5 text-xs"
-            onClick={async () => {
-              if (await confirmDiscard()) close();
-            }}
-          >
-            <ArrowLeft className="size-3.5" />
-            {t("manage.back")}
-          </Button>
-          <h1 className="truncate text-sm font-semibold">{title}</h1>
-        </div>
+      <PanelShell
+        scroll={false}
+        leading={
+          <BackButton
+            label={t("manage.back")}
+            onClick={() =>
+              void (async () => {
+                if (await confirmDiscard()) close();
+              })()
+            }
+          />
+        }
+        title={title}
+      >
         {editing.kind === "host" ? (
           <HostForm
             key={editing.host?.id ?? "new"}
@@ -271,7 +271,7 @@ export function HostsTab() {
             }
           />
         )}
-      </div>
+      </PanelShell>
     );
   }
 
@@ -289,7 +289,7 @@ export function HostsTab() {
 
   return (
     <div className="flex flex-1 min-h-0 flex-col">
-      <div className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-1.5">
+      <ToolbarBand className="px-4">
         <Segmented
           value={mode}
           onChange={(next) => void switchMode(next)}
@@ -322,7 +322,7 @@ export function HostsTab() {
             {mode === "hosts" ? t("manage.addHost") : t("manage.addCredential")}
           </Button>
         </div>
-      </div>
+      </ToolbarBand>
 
       <div className="flex-1 min-h-0 overflow-y-auto">
         <div className="mx-auto w-full max-w-4xl p-4">
