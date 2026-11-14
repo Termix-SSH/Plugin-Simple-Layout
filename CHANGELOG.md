@@ -5,6 +5,7 @@
 ### Changed
 
 - Runs in its own process on Termix 26.11.2 and later, with no access to the server beyond what Termix allows it
+- Host cards show badges and status dots from other plugins, also from plugins that run in their own frame (needs Termix 26.11.2)
 
 ## 1.0.2
 
