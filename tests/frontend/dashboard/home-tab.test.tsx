@@ -80,3 +80,36 @@ describe("HomeTab", () => {
     expect(screen.queryByLabelText("hidden")).toBeNull();
   });
 });
+
+describe("HomeTab host values", () => {
+  it("draws status indicator and badge values from plugins", async () => {
+    const { renderWithApp } = await import("@termix-ssh/plugin-sdk/testing");
+    const rendered = await renderWithApp(
+      {
+        activate(app) {
+          app.registerHostStatusIndicator({
+            id: "site",
+            when: () => true,
+            useValue: () => ({
+              shape: "dot",
+              tone: "good",
+              label: "Reachable",
+            }),
+          });
+          app.registerHostBadge({
+            id: "tag",
+            when: () => true,
+            useValue: () => ({ shape: "badge", label: "Mirrored" }),
+          });
+        },
+      },
+      { pluginId: "sites" },
+    );
+    render(<HomeTab />);
+    expect(await screen.findByText("Mirrored")).toBeTruthy();
+    expect(
+      document.querySelector("[data-data-dot='good']")?.getAttribute("title"),
+    ).toBe("Reachable");
+    await rendered.deactivate();
+  });
+});
